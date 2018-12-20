@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Net.Mail;
 using System.Web.Services;
 
@@ -59,48 +60,17 @@ namespace RogueWebService
         /// Date: 12/20/18
         /// </remarks>
         [WebMethod]
-        public object[] GetUserInfo (string username, string password)
+        public DataTable GetUserInfo (string username, string password)
         {
             USERSTableAdapter users = new USERSTableAdapter();
-
-            string id = "", displayname = "";
-
-            try
-            {
-                id = users.GetDataByLogin(username, password)[0]["USER_ID"].ToString();
-                displayname = users.GetDataByLogin(username, password)[0]["USER_ID"].ToString();
-            }
-            catch(Exception ex)
-            {
-                id = "";
-                displayname = "";
-
-                Email("RogueWS Error - GetUserInfo", "GetUserInfo broke with this exception: " + ex.Message, "linkin562@gmail.com");
-            }
-
-            object[] obj = new object[] { id, displayname };
-            return obj;
+            return users.GetDataByLogin(username, password);
         }
 
         [WebMethod]
-        public string[] GetCharacters (string userid)
+        public DataTable GetCharacters (string userid)
         {
             CHARACTERSTableAdapter characters = new CHARACTERSTableAdapter();
-            int r = characters.GetData(int.Parse(userid)).Rows.Count,
-                c = characters.GetData(int.Parse(userid)).Columns.Count;
-
-            List<string> Characters = new List<string>();
-            string record = "";
-            for(int i = 0; i < r; i++)
-            {
-                for(int j = 0; j < c; j++)
-                {
-                    record += string.Concat(characters.GetData(int.Parse(userid))[i][j].ToString(), "`");
-                }
-                Characters.Add(record);
-            }
-
-            return Characters.ToArray();
+            return characters.GetData(int.Parse(userid));
         }
     }
 }
