@@ -10,8 +10,6 @@ using RogueWebService.RogueDBTableAdapters;
 
 namespace RogueWebService
 {
-    
-
     /// <summary>
     /// Summary description for Service
     /// </summary>
@@ -32,6 +30,7 @@ namespace RogueWebService
             return "Hello World";
         }
 
+        [WebMethod]
         public void Email (string subject, string message, string email)
         {
             MailMessage mail = new MailMessage("RogueWS@gmail.com", email);
@@ -83,22 +82,21 @@ namespace RogueWebService
         }
 
         [WebMethod]
-        public List<object[]> GetCharacters (string userid)
+        public List<string> GetCharacters (string userid)
         {
             CHARACTERSTableAdapter characters = new CHARACTERSTableAdapter();
             int r = characters.GetData(int.Parse(userid)).Rows.Count,
                 c = characters.GetData(int.Parse(userid)).Columns.Count;
 
-            List<object[]> Characters = new List<object[]>();
-            object[] character_records = new object[r];
-
+            List<string> Characters = new List<string>();
+            string record = "";
             for(int i = 0; i < r; i++)
             {
                 for(int j = 0; j < c; j++)
                 {
-                    character_records[j] = characters.GetData(int.Parse(userid))[i][j];
+                    record += string.Concat(characters.GetData(int.Parse(userid))[i][j].ToString(), "`");
                 }
-                Characters.Add(character_records);
+                Characters.Add(record);
             }
 
             return Characters;
