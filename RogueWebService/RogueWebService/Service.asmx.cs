@@ -1,4 +1,5 @@
-﻿using System.Web.Services;
+﻿using System.Collections.Generic;
+using System.Web.Services;
 
 #if DEBUG
 #else
@@ -31,22 +32,25 @@ namespace RogueWebService
         }
 
         [WebMethod]
-        public object[,] GetCharacters (string userid)
+        public List<object[]> GetCharacters (string userid)
         {
             CHARACTERSTableAdapter characters = new CHARACTERSTableAdapter();
             int r = characters.GetData(int.Parse(userid)).Rows.Count,
                 c = characters.GetData(int.Parse(userid)).Columns.Count;
 
-            object[,] character_records = new object[r, c];
+            List<object[]> Characters = new List<object[]>();
+            object[] character_records = new object[r];
+
             for(int i = 0; i < r; i++)
             {
                 for(int j = 0; j < c; j++)
                 {
-                    character_records[i,j] = characters.GetData(int.Parse(userid))[i][j];
+                    character_records[j] = characters.GetData(int.Parse(userid))[i][j];
                 }
+                Characters.Add(character_records);
             }
 
-            return character_records;
+            return Characters;
         }
     }
 }
