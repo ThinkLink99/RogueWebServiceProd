@@ -4,6 +4,7 @@ using System.Net.Mail;
 using System.Web.Services;
 
 #if DEBUG
+using RogueWebService.RogueDBTableAdapters;
 #else
 using RogueWebService.RogueDBTableAdapters;
 #endif
