@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Services;
+﻿using System.Web.Services;
+
+#if DEBUG
+#else
+using RogueWebService.RogueDBTableAdapters;
+#endif
 
 namespace RogueWebService
 {
@@ -20,6 +21,32 @@ namespace RogueWebService
         public string HelloWorld()
         {
             return "Hello World";
+        }
+
+        [WebMethod]
+        public object[] GetUserInfo (string username, string password)
+        {
+            USERSTableAdapter users = new USERSTableAdapter();
+            return new object[] { users.GetDataByLogin(username, password)[0]["USER_ID"], users.GetDataByLogin(username, password)[0]["USER_ID"] };
+        }
+
+        [WebMethod]
+        public object[,] GetCharacters (string userid)
+        {
+            CHARACTERSTableAdapter characters = new CHARACTERSTableAdapter();
+            int r = characters.GetData(int.Parse(userid)).Rows.Count,
+                c = characters.GetData(int.Parse(userid)).Columns.Count;
+
+            object[,] character_records = new object[r, c];
+            for(int i = 0; i < r; i++)
+            {
+                for(int j = 0; j < c; j++)
+                {
+                    character_records[i,j] = characters.GetData(int.Parse(userid))[i][j];
+                }
+            }
+
+            return character_records;
         }
     }
 }
