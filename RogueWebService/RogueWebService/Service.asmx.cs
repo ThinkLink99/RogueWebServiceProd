@@ -83,7 +83,7 @@ namespace RogueWebService
         }
 
         [WebMethod]
-        public List<string> GetCharacters (string userid)
+        public string[] GetCharacters (string userid)
         {
             CHARACTERSTableAdapter characters = new CHARACTERSTableAdapter();
             int r = characters.GetData(int.Parse(userid)).Rows.Count,
@@ -100,7 +100,7 @@ namespace RogueWebService
                 Characters.Add(record);
             }
 
-            return Characters;
+            return Characters.ToArray();
         }
     }
 }
